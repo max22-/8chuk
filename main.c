@@ -3,16 +3,18 @@
 #include "pico/binary_info.h"
 #include "hardware/i2c.h"
 #include "nunchuk.h"
+#include "usb_stuff.h"
+#include "basic_io.h"
 
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
 #error No i2c on this board
 #endif
 
 int main() {
+    usb_init();
     stdio_init_all();
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    led_init();
+    button_init();
 
     // Initializing i2c
     i2c_init(i2c_default, 400 * 1000);
@@ -26,11 +28,8 @@ int main() {
     nunchuk_init();
 
     while (true) {
+        usb_task();
         printf("Hello, world!\n");
-        gpio_put(LED_PIN, 1);
-        sleep_ms(250);
-        gpio_put(LED_PIN, 0);
-        sleep_ms(250);
         nunchuk_update();
         nunchuk_display();
     }

@@ -6,14 +6,21 @@ project(8chuk)
 
 pico_sdk_init()
 
-add_executable(8chuk
-    8chuk.c
+add_executable(${PROJECT_NAME}
+    main.c
     nunchuk.c
+    usb_stuff.c
+    usb_descriptors.c
+    basic_io.c
+    ring_buffer.c
 )
 
-pico_enable_stdio_usb(8chuk 1)
-pico_enable_stdio_uart(8chuk 0)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PICO_TINYUSB_PATH}/src)
 
-pico_add_extra_outputs(8chuk)
+pico_enable_stdio_usb(${PROJECT_NAME} 0)
+pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
-target_link_libraries(8chuk pico_stdlib hardware_i2c)
+pico_add_extra_outputs(${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_i2c tinyusb_device)
