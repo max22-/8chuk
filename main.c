@@ -5,6 +5,8 @@
 #include "nunchuk.h"
 #include "usb_stuff.h"
 #include "basic_io.h"
+#include "ring_buffer.h"
+#include "8joy.h"
 
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
 #error No i2c on this board
@@ -26,11 +28,17 @@ int main() {
     bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
 
     nunchuk_init();
+    eight_joy_set_callback(ring_buffer_put);
+
+    double x = 0, y = 0;
 
     while (true) {
-        usb_task();
-        printf("Hello, world!\n");
         nunchuk_update();
-        nunchuk_display();
+        x = nunchuk_x();
+        y = nunchuk_y();
+        x = (x - 128) / 128;
+        y = (y - 128) / 128;
+        eight_joy_update(x, y);
+        usb_task();
     }
 }

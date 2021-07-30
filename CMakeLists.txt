@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     usb_descriptors.c
     basic_io.c
     ring_buffer.c
+    8joy.c
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
