@@ -11,6 +11,7 @@
 #include "basic_io.h"
 #include "ring_buffer.h"
 #include "8joy.h"
+#include "keymap.h"
 
 
 //--------------------------------------------------------------------+
@@ -92,16 +93,14 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
   {
     case REPORT_ID_KEYBOARD:
     {
-
-      hid_key key = ring_buffer_get();
+      char key = ring_buffer_get();
       static bool flag = false;
-      if (!key_equal(key, key_none))
+      if (key != 0)
       {
         flag = true;
         uint8_t keycode[6] = { 0 };
-        keycode[0] = key.keycode;
-
-        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, key.modifier, keycode);
+        keycode[0] = hid_keycode[key];
+        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, hid_modifier[key], keycode);
         
       }
       else {

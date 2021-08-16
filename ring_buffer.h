@@ -3,7 +3,7 @@
 
 #include "8joy.h"
 
-void ring_buffer_put(hid_key c);
-hid_key ring_buffer_get();
+void ring_buffer_put(char c);
+char ring_buffer_get();
 
 #endif

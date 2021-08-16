@@ -1,12 +1,12 @@
 #include "ring_buffer.h"
 
-static hid_key ring_buffer[8];
+static char ring_buffer[8];
 static int head = 0, tail = 0;
 
-#define INC(i) ((i+1) % (sizeof(ring_buffer)/sizeof(hid_key)))
+#define INC(i) ((i+1) % (sizeof(ring_buffer)/sizeof(char)))
 
 
-void ring_buffer_put(hid_key key)
+void ring_buffer_put(char key)
 {
     ring_buffer[tail] = key;
     int nt = INC(tail);
@@ -15,11 +15,11 @@ void ring_buffer_put(hid_key key)
     tail = nt;
 }
 
-hid_key ring_buffer_get()
+char ring_buffer_get()
 {
     if(head == tail)
-        return key_none;
-    hid_key ret = ring_buffer[head];
+        return 0;
+    char ret = ring_buffer[head];
     head = INC(head);
     return ret;
 }

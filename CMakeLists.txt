@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
     basic_io.c
     ring_buffer.c
     8joy.c
+    keymap.c
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
